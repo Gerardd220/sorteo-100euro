@@ -2,19 +2,42 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sorteo 100 €</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <style>
+    @keyframes pulseGlow {
+      0%, 100% {
+        text-shadow: 0 0 8px rgba(37, 99, 235, 0.7);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(37, 99, 235, 1);
+      }
+    }
+    .pulse-glow {
+      animation: pulseGlow 2.5s ease-in-out infinite;
+    }
+    .fade-in {
+      animation: fadeIn 1s ease forwards;
+      opacity: 0;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
 <body class="bg-gradient-to-b from-blue-100 to-white min-h-screen flex items-center justify-center p-6">
 
   <div class="bg-white shadow-xl rounded-3xl p-8 max-w-xl w-full text-center space-y-6">
-    <h1 class="text-3xl font-bold text-blue-800">🎉 Sorteo 100 € – Resultado en vivo 🎉</h1>
+    <h1 class="text-3xl font-extrabold text-blue-800 pulse-glow select-none">🎉 Sorteo 100 € – Resultado en vivo 🎉</h1>
     <p class="text-gray-700 text-lg">El ganador se revelará cuando termine la cuenta atrás:</p>
     
-    <div id="countdown" class="text-3xl font-mono text-blue-600"></div>
+    <div id="countdown" class="text-4xl font-mono text-blue-600 font-semibold"></div>
     
-    <div id="winner" class="hidden text-2xl text-green-600 font-semibold mt-4">
+    <div id="winner" class="hidden text-2xl text-green-600 font-semibold mt-4 fade-in">
       🥇 ¡El número ganador es: <strong>#027</strong>! 🥇
     </div>
 
@@ -22,10 +45,35 @@
   </div>
 
   <script>
-    // Fecha del sorteo: 27 mayo 2025 a las 20:00 hora local
-    const countdownDate = new Date("2025-05-27T20:00:00").getTime();
+    const countdownDate = new Date("2025-05-25T19:30:00").getTime();
     const countdownElement = document.getElementById("countdown");
     const winnerElement = document.getElementById("winner");
+
+    function launchConfetti() {
+      const duration = 5000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 5,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd']
+        });
+        confetti({
+          particleCount: 5,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    }
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -35,6 +83,7 @@
         clearInterval(interval);
         countdownElement.classList.add("hidden");
         winnerElement.classList.remove("hidden");
+        launchConfetti();
         return;
       }
 
@@ -43,7 +92,7 @@
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }, 1000);
   </script>
 </body>
