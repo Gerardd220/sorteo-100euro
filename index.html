@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sorteo 100 €</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: #f9f9f9;
+    }
+    h1 {
+      color: #2c3e50;
+      font-size: 2.5rem;
+    }
+    #countdown {
+      font-size: 2rem;
+      margin: 20px 0;
+      color: #2980b9;
+    }
+    #winner {
+      display: none;
+      font-size: 2rem;
+      color: #27ae60;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎉 Sorteo 100 € – Resultado en vivo 🎉</h1>
+  <p>El ganador se revelará cuando termine la cuenta atrás:</p>
+  <div id="countdown"></div>
+  <div id="winner">🥇 ¡El número ganador es: <strong>#027</strong>! 🥇</div>
+
+  <script>
+    // Fecha objetivo: 27 mayo 2025 a las 20:00 (hora local del navegador)
+    const countdownDate = new Date("2025-05-27T20:00:00").getTime();
+
+    const countdownElement = document.getElementById("countdown");
+    const winnerElement = document.getElementById("winner");
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = countdownDate - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        countdownElement.style.display = "none";
+        winnerElement.style.display = "block";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }, 1000);
+  </script>
+</body>
+</html>
